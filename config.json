@@ -1,0 +1,22 @@
+{
+   "host":"localhost",
+   "port":"8080",
+   "channelsList": ["mychannel"],
+   "GOPATH":"../artifacts",
+   "keyValueStore":"/project/ws_nodejs/fabric_sdk_node_study/temp",
+   "eventWaitTime":"30000",
+   "enableTls":false,
+   "users":[
+      {
+         "username":"admin",
+         "secret":"adminpw"
+      }
+   ],
+   "mysql":{
+      "host":"127.0.0.1",
+      "database":"fabricexplorer",
+      "port":"3306",
+      "username":"root",
+      "passwd":"123456"
+   }
+}
