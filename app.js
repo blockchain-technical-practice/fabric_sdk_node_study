@@ -18,7 +18,7 @@ var hfc = require('fabric-client');
 
 
 
-var tempdir = "/project/ws_nodejs/fabric_sdk_node_study/fabric-client-kvs";
+var tempdir = "/project/ws_nodejs/fabric_sdk_node_studynew/fabric-client-kvs";
 
 var client
 var channel
@@ -37,18 +37,18 @@ cryptoSuite.setCryptoKeyStore(hfc.newCryptoKeyStore({path:tempdir}))
 client.setCryptoSuite(cryptoSuite)
 
 //创建CA客户端
-var caClient = new FabricCAService('http://127.0.0.1:7054',null, '' ,cryptoSuite);
+var caClient = new FabricCAService('http://192.168.23.212:7054',null, '' ,cryptoSuite);
 
 
 //创建账本
-var channel = client.newChannel('mychannel');
+var channel = client.newChannel('roberttestchannel12');
 
 //创建order
-var order = client.newOrderer('grpc://127.0.0.1:7050');
+var order = client.newOrderer('grpc://192.168.23.212:7050');
 channel.addOrderer(order);
 
 //创建节点
-var  peer = client.newPeer('grpc://127.0.0.1:7051');
+var  peer = client.newPeer('grpc://192.168.23.212:7051');
 channel.addPeer(peer);
 
 
@@ -71,14 +71,14 @@ channel.addPeer(peer);
 
 co(( function *() {
 
-        //let adminmember = yield getadminuser();
-        //let adminmember = yield getResisteredUser('admin','org1');
+        let adminmember = yield getadminuser();
+        //let adminmember = yield getResisteredUser('user88','org1');
         var a = 1
 
         //根据区块链号获取区块信息
-        /*let result =  yield channel.queryBlock(2, peer,null);
+        let result =  yield channel.queryBlock(2, peer,null);
 
-         console.info(  JSON.stringify(result ) )*/
+         console.info(  JSON.stringify(result ) )
 
 
         /*//let adminuser = yield helper.getAdminUser('org1')
@@ -86,7 +86,7 @@ co(( function *() {
 
         console.info(  adminuser )*/
 
-        let result = yield startevents();
+        //let result = yield startevents();
 
     }
 
@@ -121,7 +121,7 @@ function startevents() {
     var password = 'adminpw'
     var member
 
-    return hfc.newDefaultKeyValueStore({path:tempdir})
+    return hfc.newDefaultKeyValueStore( { path:tempdir } )
         .then( (store)=>{
 
             client.setStateStore(store);
@@ -135,7 +135,7 @@ function startevents() {
 
 
                     eh = client.newEventHub();
-                    eh.setPeerAddr("grpc://127.0.0.1:7053");
+                    eh.setPeerAddr("grpc://192.168.23.212:7053");
 
 
                     try{
@@ -251,7 +251,7 @@ function getResisteredUser( username , userOrg ) {
                 return getadminuser().then( (adminUser) => {
 
                     member = adminUser;
-                    return caClient.register({ enrollmentID: username, affiliation: userOrg + '.department1' }, member);
+                    return caClient.register({ enrollmentID: username, affiliation: userOrg + '.depart1' }, member);
 
                 } ).then( (secret)=>{
 
@@ -315,15 +315,10 @@ function getResisteredUser( username , userOrg ) {
 function getadminuser() {
 
 
-    var users = [
-                        {
-                            "username":"admin",
-                            "secret":"adminpw"
-                        }
-                ]
 
-    var username = 'admin'
-    var password = 'adminpw'
+
+    var username = 'user88'
+    var password = 'peer2wd'
     var member
 
     return hfc.newDefaultKeyValueStore({path:tempdir})

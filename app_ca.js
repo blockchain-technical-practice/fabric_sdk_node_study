@@ -26,9 +26,9 @@ logger.setLevel('DEBUG');
 var tempdir = "/project/ws_nodejs/fabric_sdk_node_studynew/fabric-client-kvs";
 //var tempdir = "/project/opt_fabric/fabricconfig/crypto-config/peerOrganizations/org1.robertfabrictest.com/users/Admin@org1.robertfabrictest.com/msp/keystore"
 
-var client
+//var client
 // channel
-var caClient
+//var caClient
 //var order
 //var peer
 
@@ -38,14 +38,14 @@ var client = new hfc();
 //1、设置相关的环境变量
 
 //设置用于存储相关文件路径
-/*var cryptoSuite = hfc.newCryptoSuite()
-cryptoSuite.setCryptoKeyStore( hfc.newCryptoKeyStore({path:tempdir} ) )
+var cryptoSuite = hfc.newCryptoSuite()
+cryptoSuite.setCryptoKeyStore( hfc.newCryptoKeyStore({ path:tempdir } ) )
 
 
-client.setCryptoSuite(cryptoSuite)*/
+client.setCryptoSuite(cryptoSuite)
 
 //创建CA客户端
-//var caClient = new FabricCAService('http://192.168.23.212:7054',null, '' ,cryptoSuite);
+var caClient = new FabricCAService('http://192.168.23.212:7054',null, '' ,'');
 
 
 //创建账本
@@ -91,11 +91,12 @@ co(( function *() {
 
         //let adminmember = yield getadminuser();
         //let adminmember = yield getResisteredUser('admin','org1');
-        var a = 1
+        //var a = 1
 
+        /* var username = 'user88'
+   var password = 'peer2wd'*/
         //根据本地证书而不是依赖CA的方式获取管理员账号信息
-        let member = yield getOrgAdmin4Local();
-
+        let member = yield getOrgUser4FabricCa("user88","peer2wd");
 
 
         ///    =========  系统信息查询相关API ==========
@@ -381,17 +382,7 @@ co(( function *() {
         console.info(all_good)
 
 
-
-
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -409,18 +400,90 @@ co(( function *() {
 //
 
 
+/**
+ *
+ * 通过CA获取当前用户的证书信息
+ *
+ * @param username
+ * @param password
+ * @returns {Promise.<TResult>}
+ *
+ */
+function getOrgUser4FabricCa(username,password) {
+
+
+   /* var username = 'user88'
+    var password = 'peer2wd'*/
+    var member
+
+    return hfc.newDefaultKeyValueStore({path:tempdir})
+        .then( (store)=>{
+
+            client.setStateStore(store);
+            client._userContext = null;
+
+            return client.getUserContext(username,true).then( (user)=>{
+
+                if( user && user.isEnrolled() ){
+
+                    console.info(` success enrolled admin `)
+                    return user;
+
+                } else{
+
+                    return caClient.enroll( {enrollmentID: username, enrollmentSecret: password} ).then(
+
+                        (enrollment)=>{
+
+                            console.info('Successfully enrolled user \'' + username + '\'');
+                            member = new User(username)
+                            member.setCryptoSuite( client.getCryptoSuite() )
+
+                            return member.setEnrollment( enrollment.key,enrollment.certificate,'Org1MSP' )
+
+                        }).then( ()=>{
+
+                        return client.setUserContext(member)
+
+                    } ).then(()=>{
+
+                            return member
+
+                        }
+                    ).catch((err)=>{
+                        console.error('enroll admin error'+err.stack)
+                        return null
+                    })
+
+
+                }
+
+            } )
+
+
+
+
+        } )
+
+
+
+}
+
+
+//通过证书
 function getOrgAdmin4Local() {
 
 
 
-    var keyPath = "/project/opt_fabric/fabricconfig/crypto-config/peerOrganizations/org1.robertfabrictest.com/users/Admin@org1.robertfabrictest.com/msp/keystore";
+
+   /* var keyPath = "/project/opt_fabric/fabricconfig/crypto-config/peerOrganizations/org1.robertfabrictest.com/users/Admin@org1.robertfabrictest.com/msp/keystore";
     var keyPEM = Buffer.from(readAllFiles(keyPath)[0]).toString();
     var certPath = "/project/opt_fabric/fabricconfig/crypto-config/peerOrganizations/org1.robertfabrictest.com/users/Admin@org1.robertfabrictest.com/msp/signcerts";
     var certPEM = readAllFiles(certPath)[0].toString();
 
 
 
-    /*return hfc.newDefaultKeyValueStore({
+    return hfc.newDefaultKeyValueStore({
 
         path:tempdir
 
@@ -436,13 +499,15 @@ function getOrgAdmin4Local() {
             }
         });
     });
-*/
+
+    */
 
     //测试通过CA命令行生成的证书依旧可以成功的发起交易
     var keyPath = "/project/fabric_resart/config_demo/org1/186/fabric-user/msp/keystore";
     var keyPEM = Buffer.from(readAllFiles(keyPath)[0]).toString();
     var certPath = "/project/fabric_resart/config_demo/org1/186/fabric-user/msp//signcerts";
     var certPEM = readAllFiles(certPath)[0].toString();
+
 
 
     return hfc.newDefaultKeyValueStore({
@@ -453,7 +518,7 @@ function getOrgAdmin4Local() {
         client.setStateStore(store);
 
         return client.createUser({
-            username: 'user87',
+            username: 'Admin',
             mspid: 'Org1MSP',
             cryptoContent: {
                 privateKeyPEM: keyPEM,
@@ -463,8 +528,9 @@ function getOrgAdmin4Local() {
     });
 
 
-
 };
+
+
 
 function readAllFiles(dir) {
     var files = fs.readdirSync(dir);
