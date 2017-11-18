@@ -411,32 +411,32 @@ co(( function *() {
 
 function getOrgAdmin4Local() {
 
+    /*
+
+        var keyPath = "/project/opt_fabric/fabricconfig/crypto-config/peerOrganizations/org1.robertfabrictest.com/users/Admin@org1.robertfabrictest.com/msp/keystore";
+        var keyPEM = Buffer.from(readAllFiles(keyPath)[0]).toString();
+        var certPath = "/project/opt_fabric/fabricconfig/crypto-config/peerOrganizations/org1.robertfabrictest.com/users/Admin@org1.robertfabrictest.com/msp/signcerts";
+        var certPEM = readAllFiles(certPath)[0].toString();
 
 
-    var keyPath = "/project/opt_fabric/fabricconfig/crypto-config/peerOrganizations/org1.robertfabrictest.com/users/Admin@org1.robertfabrictest.com/msp/keystore";
-    var keyPEM = Buffer.from(readAllFiles(keyPath)[0]).toString();
-    var certPath = "/project/opt_fabric/fabricconfig/crypto-config/peerOrganizations/org1.robertfabrictest.com/users/Admin@org1.robertfabrictest.com/msp/signcerts";
-    var certPEM = readAllFiles(certPath)[0].toString();
 
+        return hfc.newDefaultKeyValueStore({
 
+            path:tempdir
 
-    /*return hfc.newDefaultKeyValueStore({
+        }).then((store) => {
+            client.setStateStore(store);
 
-        path:tempdir
-
-    }).then((store) => {
-        client.setStateStore(store);
-
-        return client.createUser({
-            username: 'Admin',
-            mspid: 'Org1MSP',
-            cryptoContent: {
-                privateKeyPEM: keyPEM,
-                signedCertPEM: certPEM
-            }
+            return client.createUser({
+                username: 'Admin',
+                mspid: 'Org1MSP',
+                cryptoContent: {
+                    privateKeyPEM: keyPEM,
+                    signedCertPEM: certPEM
+                }
+            });
         });
-    });
-*/
+    */
 
     //测试通过CA命令行生成的证书依旧可以成功的发起交易
     var keyPath = "/project/fabric_resart/config_demo/org1/186/fabric-user/msp/keystore";

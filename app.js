@@ -1,5 +1,6 @@
 /**
  * Created by fengxiang on 2017/9/21.
+ * QQ 411321681
  */
 
 var co = require('co');
@@ -20,11 +21,11 @@ var hfc = require('fabric-client');
 
 var tempdir = "/project/ws_nodejs/fabric_sdk_node_studynew/fabric-client-kvs";
 
-var client
+/*var client
 var channel
 var caClient
 var order
-var peer
+var peer*/
 
 var client = new hfc();
 
@@ -73,7 +74,6 @@ co(( function *() {
 
         let adminmember = yield getadminuser();
         //let adminmember = yield getResisteredUser('user88','org1');
-        var a = 1
 
         //根据区块链号获取区块信息
         let result =  yield channel.queryBlock(2, peer,null);

@@ -40,12 +40,10 @@ var client = new hfc();
 //设置用于存储相关文件路径
 var cryptoSuite = hfc.newCryptoSuite()
 cryptoSuite.setCryptoKeyStore( hfc.newCryptoKeyStore({ path:tempdir } ) )
-
-
 client.setCryptoSuite(cryptoSuite)
 
 //创建CA客户端
-var caClient = new FabricCAService('http://192.168.23.212:7054',null, '' ,'');
+var caClient = new FabricCAService('http://192.168.23.212:7054',null, '' ,cryptoSuite);
 
 
 //创建账本
@@ -412,8 +410,10 @@ co(( function *() {
 function getOrgUser4FabricCa(username,password) {
 
 
-   /* var username = 'user88'
-    var password = 'peer2wd'*/
+
+
+    var username = 'user88'
+    var password = 'peer2wd'
     var member
 
     return hfc.newDefaultKeyValueStore({path:tempdir})
@@ -464,8 +464,6 @@ function getOrgUser4FabricCa(username,password) {
 
 
         } )
-
-
 
 }
 
