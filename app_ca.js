@@ -92,7 +92,7 @@ co(( function *() {
         //var a = 1
 
         /* var username = 'user88'
-   var password = 'peer2wd'*/
+           var password = 'peer2wd'*/
         //根据本地证书而不是依赖CA的方式获取管理员账号信息
         let member = yield getOrgUser4FabricCa("user88","peer2wd");
 
