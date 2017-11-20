@@ -6,7 +6,6 @@
  */
 
 var co = require('co');
-
 var path = require('path');
 var fs = require('fs');
 var util = require('util');
@@ -16,8 +15,6 @@ var EventHub = require('fabric-client/lib/EventHub.js');
 var User = require('fabric-client/lib/User.js');
 var crypto = require('crypto');
 var FabricCAService = require('fabric-ca-client');
-
-var hfc = require('fabric-client');
 
 var log4js = require('log4js');
 var logger = log4js.getLogger('Helper');
@@ -33,8 +30,6 @@ var tempdir = "/project/ws_nodejs/fabric_sdk_node_studynew/fabric-client-kvs";
 //var peer
 
 var client = new hfc();
-
-
 //1、设置相关的环境变量
 
 //设置用于存储相关文件路径
@@ -57,6 +52,7 @@ channel.addOrderer(order);
 //创建节点
 var  peer188 = client.newPeer('grpc://172.16.10.188:7051');
 channel.addPeer(peer188);
+
 
 var  peer = client.newPeer('grpc://192.168.23.212:7051');
 channel.addPeer(peer);
@@ -410,10 +406,6 @@ co(( function *() {
 function getOrgUser4FabricCa(username,password) {
 
 
-
-
-    var username = 'user88'
-    var password = 'peer2wd'
     var member
 
     return hfc.newDefaultKeyValueStore({path:tempdir})
@@ -459,9 +451,6 @@ function getOrgUser4FabricCa(username,password) {
                 }
 
             } )
-
-
-
 
         } )
 

@@ -94,7 +94,7 @@ co(( function *() {
         var a = 1
 
         //根据本地证书而不是依赖CA的方式获取管理员账号信息
-        let member = yield getOrgAdmin4Local();
+        let member = yield getOrgUser4Local();
 
 
 
@@ -380,19 +380,7 @@ co(( function *() {
 
         console.info(all_good)
 
-
-
-
     }
-
-
-
-
-
-
-
-
-
 
 
 )())
@@ -409,10 +397,17 @@ co(( function *() {
 //
 
 
-function getOrgAdmin4Local() {
+/**
+ *
+ * 根据cryptogen模块生成的账号通过Fabric接口进行相关的操作
+ *
+ * @returns {Promise.<TResult>}
+ *
+ */
+function getOrgUser4Local() {
 
-    /*
 
+        /*
         var keyPath = "/project/opt_fabric/fabricconfig/crypto-config/peerOrganizations/org1.robertfabrictest.com/users/Admin@org1.robertfabrictest.com/msp/keystore";
         var keyPEM = Buffer.from(readAllFiles(keyPath)[0]).toString();
         var certPath = "/project/opt_fabric/fabricconfig/crypto-config/peerOrganizations/org1.robertfabrictest.com/users/Admin@org1.robertfabrictest.com/msp/signcerts";
@@ -461,10 +456,10 @@ function getOrgAdmin4Local() {
             }
         });
     });
-
-
-
 };
+
+
+
 
 function readAllFiles(dir) {
     var files = fs.readdirSync(dir);
