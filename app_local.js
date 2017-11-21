@@ -69,8 +69,6 @@ channel.addPeer(peer186);*/
 
 
 
-
-
 /*getadminuser().then((member)=>{
     return channel.queryBlock(2, peer);
 },(err)=>{
