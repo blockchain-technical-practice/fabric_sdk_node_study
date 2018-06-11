@@ -22,12 +22,12 @@ cryptoSuit.setCryptoKeyStore(cryptoKeyStore)
 //get private key by ski
 //create private key
 cryptoSuit.getKey('8a4ed8278fd021fddcad61d3691f086da70dc19c40d243a7da4029c88cdd9ae9').then(key=>{
-    console.info(key._key.prvKeyHex)
+    console.info( key._key.prvKeyHex )
     // console.info(key.getSKI())
     var pkey=key.getPublicKey()
-    console.info(pkey._key.pubKeyHex)
+    console.info( pkey._key.pubKeyHex )
 }).catch(err =>{
-    console.info(err)
+    console.info( err )
 })
 
 

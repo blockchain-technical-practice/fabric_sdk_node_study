@@ -6,7 +6,7 @@
  */
 
 var co = require('co');
-
+var http = require('http');
 var path = require('path');
 var fs = require('fs');
 var util = require('util');
@@ -33,7 +33,7 @@ var caClient
 //var peer
 
 var client = new hfc();
-
+var superagent = require('superagent');
 
 //1、设置相关的环境变量
 
@@ -49,7 +49,7 @@ client.setCryptoSuite(cryptoSuite)*/
 
 
 //创建账本
-var channel = client.newChannel('roberttestchannel12');
+var channel = client.newChannel('roberttestchannel');
 
 //创建order
 var order = client.newOrderer('grpc://192.168.23.212:7050');
@@ -57,8 +57,8 @@ channel.addOrderer(order);
 //创建节点
 
 //创建节点
-var  peer188 = client.newPeer('grpc://172.16.10.188:7051');
-channel.addPeer(peer188);
+/*var  peer188 = client.newPeer('grpc://172.16.10.188:7051');
+channel.addPeer(peer188);*/
 
 var  peer = client.newPeer('grpc://192.168.23.212:7051');
 channel.addPeer(peer);
@@ -94,19 +94,16 @@ co(( function *() {
         //根据本地证书而不是依赖CA的方式获取管理员账号信息
         let member = yield getOrgUser4Local();
 
-
-
         ///    =========  系统信息查询相关API ==========
-
 
         //获取当前peer服务器的信息
         /*let resultpeerinfo = yield channel.queryInfo(peer)
         console.info(  JSON.stringify(resultpeerinfo ) )*/
 
         //根据区块编号获取区块信息
-        /*let blockinfobyNum =  yield channel.queryBlock(23, peer,null);
-        console.info(  JSON.stringify( blockinfobyNum ) )*/
-
+        /*let blockinfobyNum =  yield channel.queryBlock(178, peer,null);
+        console.info(  JSON.stringify( blockinfobyNum ) )
+        */
 
         //根据区块链HASH获取区块详细信息
         /*let blockinfobyhash = yield channel.queryBlockByHash(new Buffer("ec298dc1cd1f0e0a3f6d6e25b5796e7b5e4d668aeb6ec3a90b4aa6bb1a7f0c17","hex"),peer)
@@ -115,9 +112,8 @@ co(( function *() {
 
         //查询Peer节点加入的所有通道
         /*let resultchannels = yield client.queryChannels(peer)
-        console.info(  JSON.stringify( resultchannels ) )
-        */
-
+        console.info(  JSON.stringify( resultchannels ) )*//*let resultchannels = yield client.queryChannels(peer)
+        console.info(  JSON.stringify( resultchannels ) )*/
 
         //查询已经install的chaincode
 
@@ -126,15 +122,61 @@ co(( function *() {
 
 
         // 查询已经实例化的Chaincode
-        /*let chaincodeinstalls = yield channel.queryInstantiatedChaincodes( peer )
+       /* let chaincodeinstalls = yield channel.queryInstantiatedChaincodes( peer )
         console.info(  JSON.stringify( chaincodeinstalls ) )*/
 
 
         //根据交易编号获取交易详细信息
 
        /* let resulttxinfo = yield channel.queryTransaction("56f51f9a54fb4755fd68c6c24931234a59340f7c98308374e9991d276d7d4a96", peer);
-        console.info(  JSON.stringify( resulttxinfo ) )
-       */
+        console.info(  JSON.stringify( resulttxinfo ) )*/
+
+
+
+       //获取通道的配置信息
+
+        tx_id = client.newTransactionID();
+        let g_request = {
+            txId :     tx_id
+        };
+
+       let r2 = yield channel.getChannelConfig();
+
+       let channeljoinorgs = r2['config']['channel_group']['groups']['map']['Application']['value']['groups']['map'];
+       let join_groups = [];
+
+       for( orgkey in channeljoinorgs ){
+           join_groups.push(orgkey);
+       }
+
+
+        console.info( join_groups );
+
+       let r1 = yield channel.getGenesisBlock(g_request);
+       let data = r1['data']['data'][0]['buffer'].toString('utf-8');
+
+
+
+
+
+
+
+       /*console.info(  r1['header']['data_hash'] )
+       console.info(  r1['data']['data'][0] )*/
+       //console.info( data );
+
+       /* var response = superagent.post("http://127.0.0.1:8188/protolator/decode/common.Block", r1['data']['data'][0]['buffer'])
+            .buffer()
+            .end((err, res) => {
+
+                if(err) {
+                    logger.error(err);
+                    return;
+                }
+
+                config_proto = res.body;
+            });
+*/
 
 
         //======  系统管理相关API ============
@@ -290,7 +332,7 @@ co(( function *() {
         myArray.push(peer);
         myArray.push(peer190);*/
 
-        let tx_id = client.newTransactionID();
+        /*let tx_id = client.newTransactionID();
         var request = {
 
             chaincodeId: "cc_endfinlshed",
@@ -376,7 +418,7 @@ co(( function *() {
 
         }
 
-        console.info(all_good)
+        console.info(all_good)*/
 
     }
 
@@ -386,9 +428,7 @@ co(( function *() {
 
 
 
-
 //2、设定client order caclient
-
 
 //3、用admin账号登录下
 
@@ -405,7 +445,6 @@ co(( function *() {
 function getOrgUser4Local() {
 
 
-        /*
         var keyPath = "/project/opt_fabric/fabricconfig/crypto-config/peerOrganizations/org1.robertfabrictest.com/users/Admin@org1.robertfabrictest.com/msp/keystore";
         var keyPEM = Buffer.from(readAllFiles(keyPath)[0]).toString();
         var certPath = "/project/opt_fabric/fabricconfig/crypto-config/peerOrganizations/org1.robertfabrictest.com/users/Admin@org1.robertfabrictest.com/msp/signcerts";
@@ -429,10 +468,9 @@ function getOrgUser4Local() {
                 }
             });
         });
-    */
 
     //测试通过CA命令行生成的证书依旧可以成功的发起交易
-    var keyPath = "/project/fabric_resart/config_demo/org1/186/fabric-user/msp/keystore";
+    /*var keyPath = "/project/fabric_resart/config_demo/org1/186/fabric-user/msp/keystore";
     var keyPEM = Buffer.from(readAllFiles(keyPath)[0]).toString();
     var certPath = "/project/fabric_resart/config_demo/org1/186/fabric-user/msp//signcerts";
     var certPEM = readAllFiles(certPath)[0].toString();
@@ -453,7 +491,7 @@ function getOrgUser4Local() {
                 signedCertPEM: certPEM
             }
         });
-    });
+    });*/
 };
 
 
@@ -493,3 +531,11 @@ function readAllFiles(dir) {
         })
 
  */
+
+
+process.on('unhandledRejection', function (err) {
+    console.error(err.stack);
+});
+
+process.on(`uncaughtException`, console.error);
+

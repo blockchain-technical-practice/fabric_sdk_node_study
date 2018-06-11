@@ -80,6 +80,9 @@ channel.addPeer(peer186);*/
 
 
 
+console.info("grpc://".indexOf('org'))
+
+
 
 co(( function *() {
 

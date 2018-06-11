@@ -76,9 +76,9 @@ co(( function *() {
         //let adminmember = yield getResisteredUser('user88','org1');
 
         //根据区块链号获取区块信息
-        let result =  yield channel.queryBlock(2, peer,null);
+        let result =  yield channel.queryBlock(50, peer,null);
 
-         console.info(  JSON.stringify(result ) )
+        console.info(  JSON.stringify(result ) )
 
 
         /*//let adminuser = yield helper.getAdminUser('org1')
