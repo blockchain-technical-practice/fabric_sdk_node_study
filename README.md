@@ -13,6 +13,12 @@
 
 [购买链接](https://search.jd.com/Search?keyword=区块链开发实战&enc=utf-8&wq=区块链开发实战&pvid=62e6789cc6ca42ed967de131df18fae8)
 
+## 问题反馈，
+
+为了帮助读者更好的阅读本书，我们跟中国最大的区块链技术社区区块链兄弟合作，在区块链兄弟上面开设了专栏。如果您在阅读本丛书的过程遇到的问题，可以通过以下连接提交问题
+
+<a href="http://www.blockchainbrother.com/questions/blockchain-technical-practice">点击，提交阅读本书的过程中遇到的问题</a>
+
 
 ## 丛书介绍
 
